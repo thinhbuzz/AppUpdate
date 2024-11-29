@@ -18,11 +18,8 @@ import com.azhon.appupdate.view.UpdateDialogActivity
 import java.io.Serializable
 
 /**
- * ProjectName: AppUpdate
- * PackageName: com.azhon.appupdate.manager
- * FileName:    DownloadManager
- * CreateDate:  2022/4/7 on 10:36
- * Desc:
+ * createDate:  2022/4/7 on 10:36
+ * desc:
  *
  * @author azhon
  */
@@ -33,9 +30,6 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
         private var instance: DownloadManager? = null
 
         internal fun getInstance(builder: Builder? = null): DownloadManager? {
-            if (instance != null && builder != null) {
-                instance!!.release()
-            }
             if (instance == null) {
                 if (builder == null) return null
                 instance = DownloadManager(builder)
@@ -176,8 +170,10 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
 
     /**
      * release objects
+     * Call this method when you need to destroy the previous download and re-download,
+     * otherwise don't use it.
      */
-    internal fun release() {
+    fun release() {
         httpManager?.release()
         clearListener()
         instance = null

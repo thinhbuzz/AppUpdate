@@ -14,13 +14,20 @@ import com.azhon.appupdate.listener.OnDownloadListenerAdapter
 import com.azhon.appupdate.manager.DownloadManager
 import com.azhon.appupdate.util.ApkUtil
 
+/**
+ * createDate: 2022/04/08 on 14:52
+ * desc:
+ *
+ * @author azhon
+ */
+
 class MainActivity : AppCompatActivity(), View.OnClickListener, OnButtonClickListener {
 
     companion object {
         private const val TAG = "MainActivity"
     }
 
-    private val url = "http://s.duapps.com/apks/own/ESFileExplorer-cn.apk"
+    private val url = "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_9.0.81_64.apk"
     private val apkName = "appupdate.apk"
     private var manager: DownloadManager? = null
     private lateinit var tvPercent: TextView
@@ -86,19 +93,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OnButtonClickLis
             apkVersionName("v4.2.1")
             apkSize("7.7MB")
             apkDescription(getString(R.string.dialog_msg))
-//            apkMD5("DC501F04BBAA458C9DC33008EFED5E7F")
-
             enableLog(true)
-//            httpManager()
             jumpInstallPage(true)
-//            dialogImage(R.drawable.ic_dialog)
-//            dialogButtonColor(Color.parseColor("#E743DA"))
-//            dialogProgressBarColor(Color.parseColor("#E743DA"))
             dialogButtonTextColor(Color.WHITE)
             showNotification(true)
             showBgdToast(false)
             forcedUpgrade(false)
             onDownloadListener(listenerAdapter)
+//            apkMD5("DC501F04BBAA458C9DC33008EFED5E7F")
+//            httpManager()
+//            dialogImage(R.drawable.ic_dialog)
+//            dialogButtonColor(Color.parseColor("#E743DA"))
+//            dialogProgressBarColor(Color.parseColor("#E743DA"))
+//            notificationChannel()
+//            notifyId(1011)
             onButtonClickListener(this@MainActivity)
             build()
         }

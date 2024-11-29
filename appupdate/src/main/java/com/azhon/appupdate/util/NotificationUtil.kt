@@ -16,11 +16,8 @@ import com.azhon.appupdate.service.DownloadService
 import java.io.File
 
 /**
- * ProjectName: AppUpdate
- * PackageName: com.azhon.appupdate.util
- * FileName:    NotificationUtil
- * CreateDate:  2022/4/7 on 13:36
- * Desc:
+ * createDate:  2022/4/7 on 13:36
+ * desc:
  *
  * @author azhon
  */
@@ -102,7 +99,11 @@ class NotificationUtil {
             }
             manager.cancel(DownloadManager.getInstance()?.notifyId ?: Constant.DEFAULT_NOTIFY_ID)
             val intent = ApkUtil.createInstallIntent(context, authorities, apk)
-            val pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            val pi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            } else {
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            }
             val notify = builderNotification(context, icon, title, content)
                 .setContentIntent(pi)
                 .build()
@@ -125,7 +126,11 @@ class NotificationUtil {
                 afterO(manager)
             }
             val intent = Intent(context, DownloadService::class.java)
-            val pi = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            val pi = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            } else {
+                PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            }
             val notify = builderNotification(context, icon, title, content)
                 .setAutoCancel(true)
                 .setOngoing(false)

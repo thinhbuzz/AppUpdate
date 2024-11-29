@@ -3,46 +3,58 @@
 <p align="center"><img src="https://github.com/azhon/AppUpdate/blob/main/img/logo.png"></p>
 <p align="center">
   <img src="https://img.shields.io/badge/miniSdk-16%2B-blue.svg">
-  <img src="https://img.shields.io/badge/mavenCentral-4.2.9-brightgreen.svg">
+  <img src="https://img.shields.io/badge/mavenCentral-4.3.6-brightgreen.svg">
   <img src="https://img.shields.io/badge/author-azhon-%23E066FF.svg">
   <img src="https://img.shields.io/badge/license-Apache2.0-orange.svg">
 </p>
 
-### [由于Android Q版本限制后台应用启动Activity，所以下载完成会发送一个通知至通知栏（忽略showNotification的值，需要允许发送通知）](https://developer.android.google.cn/guide/components/activities/background-starts)
+## 如果你是Flutter，请使用[flutter_app_update](https://github.com/azhon/flutter_app_update)
 
-## 扫码加入QQ群(群号：828385813)
+> [!NOTE]
+> ### 本库核心逻辑（必读）：
+> #### 1、当调用了`apkVersionCode()`设置了最新的VersionCode，则内部会自动判断是否显示对话框、下载和安装
+> - 适配Android 13通知运行权限，且当设置`showNotification(true)`时，点击对话框的升级按钮会申请通知栏权限，无论是否同意都将会继续下载
+> - 当设置强制更新`forcedUpgrade(true)`时，显示的对话框会显示下载进度条
+> #### 2、当没有调用`apkVersionCode()`，就可以把它当成一个下载器，内部只会进行下载和安装
+> #### 3、由于Android 10限制后台应用启动Activity，所以下载完成会发送一个通知至通知栏（忽略showNotification的值，需要允许发送通知）
+> #### 4、[更多用法请点此查看](https://github.com/azhon/AppUpdate/blob/main/app/src/main/java/com/azhon/app/MainActivity.kt#L79)
 
-<img
-src="https://github.com/azhon/AppUpdate/blob/main/img/qq_group.png">
+### 相关文档链接
+- [限制后台启动Activity](https://developer.android.google.cn/guide/components/activities/background-starts)
+- [通知栏适配](https://developer.android.google.cn/guide/topics/ui/notifiers/notifications?hl=zh-cn)
 
 ## 目录
 
 * [效果图](#效果图)
 * [功能介绍](#功能介绍)
 * [Demo下载体验](#demo下载体验)
+* [扫码加入QQ群](#扫码加入qq群)
 * [使用步骤](#使用步骤)
 * [使用技巧](#使用技巧)
+* [常见问题](#常见问题)
 * [版本更新记录](#版本更新记录)
+* [赞赏](#赞赏)
 
 ### 效果图
 
 <img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_1.png" width="300">　<img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_2.png" width="300">
 <img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_3.png" width="300">　<img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_4.png" width="300">
 <img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_5.png" width="300">　<img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_6.png" width="300">
+<img src="https://github.com/azhon/AppUpdate/blob/main/img/zh/zh_7.png" width="300">
 
 ### 功能介绍
 
-* [x] 支持Kotlin
+* [x] 支持Java、Kotlin
 * [x] 支持AndroidX
 * [x] 支持后台下载
 * [x] 支持强制更新
 * [x] 支持自定义下载过程
 * [x] 支持Android4.1及以上版本
-* [x] 支持通知栏进度条展示(或者自定义显示进度)
+* [x] 支持通知栏进度条展示，适配到Android 13
 * [x] 支持中文/繁体/英文语言（国际化）
 * [x] 支持自定义内置对话框样式
 * [x] 支持取消下载(如果发送了通知栏消息，则会移除)
-* [x] 支持下载完成 打开新版本后删除旧安装包文件
+* [x] 支持下载完成，打开新版本后删除旧安装包文件
 * [x] 不需要申请存储权限
 * [x] 使用HttpURLConnection下载，未集成其他第三方框架
 
@@ -50,13 +62,20 @@ src="https://github.com/azhon/AppUpdate/blob/main/img/qq_group.png">
 
  [点击下载Demo进行体验](https://github.com/azhon/AppUpdate/releases/tag/demo)
 
+### 扫码加入QQ群
+- 或者添加加微信：hb958460248（备注 AppUpdate）
+- 611136880
+- 828385813（已满）
+
+<img src="https://github.com/azhon/AppUpdate/blob/main/img/qq_group_0.jpg" width="200"> <img src="https://github.com/azhon/AppUpdate/blob/main/img/qq_group_1.jpg" width="200">
+
 
 ### 使用步骤
 
 #### 第一步：`app/build.gradle`添加依赖
 
 ```groovy
-implementation 'io.github.azhon:appupdate:4.2.9'
+implementation 'io.github.azhon:appupdate:4.3.6'
 ```
 
 <details>
@@ -80,9 +99,10 @@ dependencies {
 ```
 </details>
 
-#### 第二步：创建`DownloadManager`，更多用法请查看[这里示例代码](https://github.com/azhon/AppUpdate/blob/main/app/src/main/java/com/azhon/app/MainActivity.kt)
+#### 第二步：创建`DownloadManager`
 
-**如果需要显示内置的对话框那么你需要调用`builder.apkVersionCode()`将新版本的versionCode填进去，同时值必须大于当前版本的**
+<details open>
+<summary>Kotlin</summary>
 
 ```java
 val manager = DownloadManager.Builder(this).run {
@@ -100,6 +120,28 @@ val manager = DownloadManager.Builder(this).run {
 }
 manager?.download()
 ```
+</details>
+
+<details>
+<summary>Java</summary>
+
+```java
+DownloadManager manager = new DownloadManager.Builder(this)
+        .apkUrl("your apk url")
+        .apkName("appupdate.apk")
+        .smallIcon(R.mipmap.ic_launcher)
+        //设置了此参数，那么内部会自动判断是否需要显示更新对话框，否则需要自己判断是否需要更新
+        .apkVersionCode(2)
+        //同时下面三个参数也必须要设置
+        .apkVersionName("v4.2.2")
+        .apkSize("7.7MB")
+        .apkDescription("更新描述信息(取服务端返回数据)")
+        //省略一些非必须参数...
+        .build();
+manager.download();
+```
+</details>
+
 #### 第三步：混淆打包，只需保持`Activity`、`Service`不混淆
 
 ```groovy
@@ -126,12 +168,19 @@ val result = ApkUtil.deleteOldApk(this, "${externalCacheDir?.path}/appupdate.apk
 ```java
 class MyDownload : BaseHttpDownloadManager() {}
 ```
+### 常见问题
+
+* App设置是横屏时下载完成无法拉起安装问题，可以在Manifest中对应的Activity添加如下代码
+
+```xml
+ android:configChanges="orientation|screenSize|keyboardHidden"
+```
 
 ### 版本更新记录
 
-* v4.2.9（2023/05/24）
+* v4.3.6（2024/10/22）
 
-  * [修复] [ISSUES #152](https://github.com/azhon/AppUpdate/issues/152)
+  * [优化] 修改DownloadManager的release()函数访问权限
 
 * [更多更新记录点此查看](https://github.com/azhon/AppUpdate/wiki/Home)
 

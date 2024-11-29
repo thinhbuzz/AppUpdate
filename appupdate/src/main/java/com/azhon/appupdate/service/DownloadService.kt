@@ -19,11 +19,8 @@ import kotlinx.coroutines.*
 import java.io.File
 
 /**
- * ProjectName: AppUpdate
- * PackageName: com.azhon.appupdate.service
- * FileName:    DownloadService
- * CreateDate:  2022/4/7 on 11:42
- * Desc:
+ * createDate:  2022/4/7 on 11:42
+ * desc:
  *
  * @author azhon
  */
@@ -58,7 +55,7 @@ class DownloadService : Service(), OnDownloadListener {
         val enable = NotificationUtil.notificationEnable(this@DownloadService)
         LogUtil.d(
             TAG,
-            if (enable) "Notification switch status: opened" else " Notification switch status: closed"
+            if (enable) "Notification switch status: opened" else "Notification switch status: closed"
         )
         if (checkApkMd5()) {
             LogUtil.d(TAG, "Apk already exist and install it directly.")
@@ -87,7 +84,7 @@ class DownloadService : Service(), OnDownloadListener {
     @Synchronized
     private fun download() {
         if (manager.downloadState) {
-            LogUtil.e(TAG, "Currently downloading, please download again!")
+            LogUtil.e(TAG, "Currently downloading, please don't download again!")
             return
         }
         if (manager.httpManager == null) {
