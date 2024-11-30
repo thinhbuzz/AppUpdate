@@ -20,11 +20,6 @@ object Constant {
     const val TAG = "AppUpdate."
 
     /**
-     * Apk file extension
-     */
-    const val APK_SUFFIX = ".apk"
-
-    /**
      * Coroutine Name
      */
     const val COROUTINE_NAME = "app-update-coroutine"

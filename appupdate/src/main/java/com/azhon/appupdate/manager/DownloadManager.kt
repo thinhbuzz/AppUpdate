@@ -63,6 +63,7 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
     internal var dialogButtonColor: Int
     internal var dialogButtonTextColor: Int
     internal var dialogProgressBarColor: Int
+    internal var fileSuffix: String
     var downloadState: Boolean = false
 
 
@@ -91,6 +92,7 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
         dialogButtonColor = builder.dialogButtonColor
         dialogButtonTextColor = builder.dialogButtonTextColor
         dialogProgressBarColor = builder.dialogProgressBarColor
+        fileSuffix = builder.fileSuffix
         // Fix memory leak
         application.registerActivityLifecycleCallbacks(object : LifecycleCallbacksAdapter() {
             override fun onActivityDestroyed(activity: Activity) {
@@ -138,8 +140,8 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
             LogUtil.e(TAG, "apkName can not be empty!")
             return false
         }
-        if (!apkName.endsWith(Constant.APK_SUFFIX)) {
-            LogUtil.e(TAG, "apkName must endsWith .apk!")
+        if (!apkName.endsWith(fileSuffix)) {
+            LogUtil.e(TAG, "apkName must endsWith $fileSuffix!")
             return false
         }
         if (smallIcon == -1) {
@@ -246,6 +248,11 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
          * Apk md5 file verification(32-bit) verification repeated download
          */
         internal var apkMD5 = ""
+
+        /**
+         * Apk file suffix
+         */
+        internal var fileSuffix = ".apk"
 
         /**
          * Apk download manager
@@ -434,6 +441,11 @@ class DownloadManager private constructor(builder: Builder) : Serializable {
 
         fun downloadPath(downloadPath: String): Builder {
             this.downloadPath = downloadPath
+            return this
+        }
+
+        fun fileSuffix(fileSuffix: String): Builder {
+            this.fileSuffix = fileSuffix
             return this
         }
 

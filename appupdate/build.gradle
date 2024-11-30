@@ -28,6 +28,20 @@ android {
         jvmTarget = '1.8'
     }
 }
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                // Thông tin về thư viện của bạn
+                groupId = 'com.github.thinhbuzz'
+                artifactId = 'appupdate'
+                version = '4.3.7'  // version bạn muốn publish
+            }
+        }
+    }
+}
 
 dependencies {
 
